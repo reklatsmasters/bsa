@@ -1,4 +1,4 @@
-// const bitwise = require('./lib/bitwise')
+const bitwise = require('./lib/bitwise')
 const split = require('./lib/split')
 const read = require('./lib/read')
 const path = require('path')
@@ -26,6 +26,11 @@ function list(buf, opts) {
   opts = opts || {}
 
   const header = read.header(buf)
+
+  if (!bitwise.get(header.archiveFlags, 1) || !bitwise.get(header.archiveFlags, 2)) {
+    throw new Error(`Archive doesn't contains real names of folders or files`)
+  }
+
   const folders = new Array(header.folders)
 
   /* read folders */
