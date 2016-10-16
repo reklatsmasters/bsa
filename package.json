@@ -1,0 +1,19 @@
+{
+  "name": "bsa",
+  "version": "0.0.0",
+  "description": "Bethesda Softworks Archive compress/decompress",
+  "main": "index.js",
+  "repository": {
+    "url": "reklatsmasters/bsa",
+    "type": "git"
+  },
+  "author": "Dmitry Tsvettsikh <me@reklatsmasters.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "ava": "^0.16.0"
+  },
+  "dependencies": {},
+  "scripts": {
+    "test": "ava test/*.js"
+  }
+}
