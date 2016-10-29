@@ -30,5 +30,9 @@ Return the list of files with folders names in archive
 #### `extract(buf: Buffer, where: string(default = '.')): Promise<>`
 extract files
 
+## Support
+* node >= 4
+* uncompressed bsa v0x68 (skyrim)
+
 ## License
 MIT, 2016 (c) Dmitry Tsvettsikh
