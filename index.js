@@ -11,15 +11,6 @@ module.exports = {
   list
 }
 
-/**
- * API
- *
- * extract(buffer|stream, where [, opts]).then()
- * extract(where [,opts])  // fs.createReadStream('./Update.bsa').pipe(extract('.', {only: '*.dds'}))
- *
- * list(buffer|stream [,opts]).then()
- */
-
 function list(buf, opts) {
   if (!Buffer.isBuffer(buf)) {
     throw new TypeError('expected buffer')
