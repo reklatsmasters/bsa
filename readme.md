@@ -27,5 +27,8 @@ output:
 #### `list(buf: Buffer): Array<string>`
 Return the list of files with folders names in archive
 
+#### `extract(buf: Buffer, where: string(default = '.')): Promise<>`
+extract files
+
 ## License
 MIT, 2016 (c) Dmitry Tsvettsikh
