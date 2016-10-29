@@ -12,7 +12,11 @@
   "devDependencies": {
     "ava": "^0.16.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "co": "^4.6.0",
+    "es6-promisify": "^5.0.0",
+    "mkdirp": "^0.5.1"
+  },
   "scripts": {
     "test": "ava test/*.js"
   }
