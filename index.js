@@ -11,12 +11,10 @@ module.exports = {
   list
 }
 
-function list(buf, opts) {
+function list(buf) {
   if (!Buffer.isBuffer(buf)) {
     throw new TypeError('expected buffer')
   }
-
-  opts = opts || {}
 
   const header = read.header(buf)
 
