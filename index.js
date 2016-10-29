@@ -13,7 +13,7 @@ module.exports = {
 
 function list(buf) {
   if (!Buffer.isBuffer(buf)) {
-    throw new TypeError('expected buffer')
+    throw new TypeError('Argument 1 must be a Buffer')
   }
 
   const header = read.header(buf)
@@ -27,9 +27,8 @@ function list(buf) {
   /* read folders */
   for(let i = 0, folders_offset = 0; i < header.folders; ++i) {
     const folder = read.folder(buf, folders_offset + header.offset)
-    const tree = read.tree(buf, folder, folder.offset - header.totalFileNameLength + 1)
+    folders[i] = read.tree(buf, folder, folder.offset - header.totalFileNameLength + 1)
 
-    folders[i] = tree
     folders_offset += 16
   }
 
