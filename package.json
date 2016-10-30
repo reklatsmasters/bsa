@@ -12,8 +12,14 @@
   "devDependencies": {
     "ava": "^0.16.0"
   },
-  "engines" : { "node" : ">=4" },
+  "engines": {
+    "node": ">=4"
+  },
+  "bin": {
+    "bsa": "./bin/bsa.js"
+  },
   "dependencies": {
+    "argparse": "^1.0.9",
     "co": "^4.6.0",
     "es6-promisify": "^5.0.0",
     "mkdirp": "^0.5.1"
