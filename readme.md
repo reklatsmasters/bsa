@@ -1,5 +1,9 @@
 # bsa
-> Bethesda Softworks Archive compress/decompress
+[![npm](https://img.shields.io/npm/v/bsa.svg)](https://npmjs.org/package/bsa)
+[![license](https://img.shields.io/npm/l/bsa.svg)](https://npmjs.org/package/bsa)
+[![downloads](https://img.shields.io/npm/dm/bsa.svg)](https://npmjs.org/package/bsa)
+
+Bethesda Softworks Archive compress/decompress
 
 ## Usage
 
