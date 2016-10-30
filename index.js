@@ -84,7 +84,7 @@ function extract(buf, where) {
         names = split(buf.slice(names_offset, names_offset + header.totalFileNameLength), 0)
       }
 
-      yield write.folder(tree.name)
+      yield write.folder(path.join(where, tree.name))
 
       for(const file of tree.files) {
         /* join file name */
@@ -93,7 +93,7 @@ function extract(buf, where) {
         /* read file data */
         const data = buf.slice(file.offset, file.offset + file.size)
 
-        yield write.file(path.join(tree.name, name), data)
+        yield write.file(path.join(where, tree.name, name), data)
         ++files_count
       }
 
