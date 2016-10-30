@@ -1,7 +1,18 @@
 # bsa
 > Bethesda Softworks Archive compress/decompress
 
-## Example
+## Usage
+
+### as cli
+
+```
+npm i -g bsa
+bsa -h
+```
+
+### as lib
+
+`npm i -S bsa`
 
 ```js
 const bsa = require('bsa')
