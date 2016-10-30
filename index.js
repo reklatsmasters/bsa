@@ -1,3 +1,5 @@
+'use strict'
+
 const bitwise = require('./lib/bitwise')
 const split = require('./lib/split')
 const read = require('./lib/read')

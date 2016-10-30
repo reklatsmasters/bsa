@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+'use strict'
 
 const args = require('../lib/args')
 const bsa = require('../')
