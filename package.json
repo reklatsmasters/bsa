@@ -1,6 +1,6 @@
 {
   "name": "bsa",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Bethesda Softworks Archive compress/decompress",
   "main": "index.js",
   "repository": {
