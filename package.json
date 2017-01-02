@@ -21,8 +21,8 @@
   "dependencies": {
     "argparse": "^1.0.9",
     "co": "^4.6.0",
-    "es6-promisify": "^5.0.0",
-    "mkdirp": "^0.5.1"
+    "mkdirp": "^0.5.1",
+    "pify": "^2.3.0"
   },
   "scripts": {
     "test": "ava test/*.js"
