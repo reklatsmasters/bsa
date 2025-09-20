@@ -4,35 +4,23 @@
 [![license](https://img.shields.io/npm/l/bsa.svg)](https://npmjs.org/package/bsa)
 [![downloads](https://img.shields.io/npm/dm/bsa.svg)](https://npmjs.org/package/bsa)
 
-Bethesda Softworks Archive compress/decompress
+Bethesda Softworks Archive extractor. Currently supports v103 only.
 
 ## Usage
 
-### as cli
-
-```
-npm i -g bsa
-bsa -h
-```
-
-### as lib
-
-`npm i -S bsa`
-
 ```js
-const bsa = require('bsa')
-const fs = require('fs')
+import * as bsa from 'bsa';
 
-const file = fs.readFileSync('Skyrim - Interface.bsa')
-console.log(bsa.list(file))
+const file = fs.readFileSync('../Oblivion/Data/DLCShiveringIsles - Voices.bsa');
+console.log(bsa.ls(file));
 
 /*
 output:
 
-[ 'interface\\controls\\360\\keyboard_english.txt',
-  'interface\\controls\\360\\gamepad.txt',
-  'interface\\controls\\360\\controlmap.txt',
-  'interface\\controls\\ps3\\keyboard_english.txt'
+[ 'sound\\voice\\oblivion.esm\\imperial\\f\\senqdmania_goodbye_00040bb3_1.mp3',
+  'sound\\voice\\oblivion.esm\\imperial\\f\\senqddementia_greeting_00068bc0_1.mp3',
+  'sound\\voice\\oblivion.esm\\imperial\\f\\senqddementia_greeting_00068bca_1.mp3',
+  'sound\\voice\\oblivion.esm\\imperial\\f\\se38_se38talkitemc_00082436_1.lip',
   // more other files...
 ]
 */
@@ -41,14 +29,20 @@ output:
 ## API
 
 #### `list(buf: Buffer): Array<string>`
-Return the list of files with folders names in archive
+#### `ls(buf: Buffer): Array<string>`
+Return the list of files with folder names in archive
 
-#### `extract(buf: Buffer, where: string(default = '.')): Promise<>`
-extract files
+#### `extractFile(buf: Buffer, index: Number): Buffer`
+Extract file based on index in file list.
 
-## Support
-* node >= 4
-* uncompressed bsa v0x68 (skyrim)
+#### `extract* (buf: Buffer)`
+Iterator / generator to extract all files.
+
+```js
+for (const file of bsa.extract(bsafile)) {
+  // do stuff...
+}
+```
 
 ## License
-MIT, 2016 (c) Dmitry Tsvettsikh
+MIT, 2016 - 2025 (c) Dmitry Tsvettsikh

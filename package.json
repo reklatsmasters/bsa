@@ -2,29 +2,27 @@
   "name": "bsa",
   "version": "0.1.0",
   "description": "Bethesda Softworks Archive compress/decompress",
-  "main": "index.js",
+  "type": "module",
+  "exports": "./src/main.js",
   "repository": {
     "url": "reklatsmasters/bsa",
     "type": "git"
   },
-  "author": "Dmitry Tsvettsikh <me@reklatsmasters.com>",
+  "author": "Dmitry Tsvettsikh",
   "license": "MIT",
-  "devDependencies": {
-    "ava": "^0.16.0"
-  },
-  "engines": {
-    "node": ">=4"
-  },
   "bin": {
     "bsa": "./bin/bsa.js"
   },
-  "dependencies": {
-    "argparse": "^1.0.9",
-    "co": "^4.6.0",
-    "mkdirp": "^0.5.1",
-    "pify": "^2.3.0"
-  },
   "scripts": {
-    "test": "ava test/*.js"
+    "lint": "npx eslint src/* lib/* bin/*",
+    "cover": "npx jest --coverage --forceExit",
+    "test": "node --test test/*"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "xo": "^0.58.0"
+  },
+  "xo": {
+    "prettier": true
   }
 }
