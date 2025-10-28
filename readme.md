@@ -32,10 +32,15 @@ output:
 #### `ls(buf: Buffer): Array<string>`
 Return the list of files with folder names in archive
 
-#### `extractFile(buf: Buffer, index: Number): Buffer`
+#### `extractFile(buf: Buffer, index: Number[, options: Object]): Buffer`
 Extract file based on index in file list.
 
-#### `extract* (buf: Buffer)`
+  * `options`
+    - `keepFileMetadata: false`
+
+    When `true` emit `BSAFileMetadata` data object.
+
+#### `extract* (buf: Buffer[, options: Object])`
 Iterator / generator to extract all files.
 
 ```js
@@ -43,6 +48,21 @@ for (const file of bsa.extract(bsafile)) {
   // do stuff...
 }
 ```
+
+For `options` see above.
+
+#### `class BSAFileMetadata`
+* get `data: Buffer`
+
+Get file data.
+
+* get `fileName: string`
+
+Get file name. If file name is missing, it returns file hash as a hex string.
+
+* get `filePath: string or null`
+
+Get full file path in archive exclude file name. Depending on archive options it might be `null`.
 
 ## License
 MIT, 2016 - 2025 (c) Dmitry Tsvettsikh

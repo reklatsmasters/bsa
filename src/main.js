@@ -27,13 +27,56 @@ function list(bsafile) {
 }
 
 /**
+ * Keeps metadata of an extracted file.
+ */
+class BSAFileMetadata {
+  #fileName;
+  #filePath;
+  #data;
+
+  constructor(data, fname, fpath) {
+    this.#data = data;
+    this.#fileName = fname;
+    this.#filePath = fpath;
+  }
+
+  /**
+   * @returns {string|null}
+   */
+  get fileName() {
+    return this.#fileName;
+  }
+
+  /**
+   * @returns {string|null}
+   */
+  get filePath() {
+    return this.#filePath;
+  }
+
+  /**
+   * @returns {Buffer}
+   */
+  get data() {
+    return this.#data;
+  }
+}
+
+/**
  * Extract all files from BSA archive.
  * @param {Buffer} bsafile BSA file.
  */
-function* extract(bsafile) {
+function* extract(bsafile, options = {}) {
   if (!Buffer.isBuffer(bsafile)) {
     throw new TypeError('Argument 1 must be a Buffer');
   }
+
+  const { keepFileMetadata } = Object.assign(
+    {
+      keepFileMetadata: false,
+    },
+    options,
+  );
 
   const header = readHeader(bsafile);
   checkHeader(header);
@@ -45,11 +88,15 @@ function* extract(bsafile) {
       const start = file.offsetFileBlock + 4;
       const compressedFile = bsafile.subarray(start, file.fileSize + start);
 
-      if (file.isCompressed) {
-        const uncompressedFile = zlib.unzipSync(compressedFile);
-        yield uncompressedFile;
+      const targetFile = file.isCompressed
+        ? zlib.unzipSync(compressedFile)
+        : compressedFile;
+
+      if (keepFileMetadata) {
+        const fileName = file.fileName ?? BigInt(file.fileHash).toString(16);
+        yield new BSAFileMetadata(targetFile, fileName, folder.folderName);
       } else {
-        yield compressedFile;
+        yield targetFile;
       }
     }
   }
@@ -61,10 +108,17 @@ function* extract(bsafile) {
  * @param {number} index Index of file to extract.
  * @returns {Buffer}
  */
-function extractFile(bsafile, index) {
+function extractFile(bsafile, index, options = {}) {
   if (!Buffer.isBuffer(bsafile)) {
     throw new TypeError('Argument 1 must be a Buffer');
   }
+
+  const { keepFileMetadata } = Object.assign(
+    {
+      keepFileMetadata: false,
+    },
+    options,
+  );
 
   const header = readHeader(bsafile);
   checkHeader(header);
@@ -88,12 +142,16 @@ function extractFile(bsafile, index) {
     const start = file.offsetFileBlock + 4;
     const compressedFile = bsafile.subarray(start, file.fileSize + start);
 
-    if (file.isCompressed) {
-      const uncompressedFile = zlib.unzipSync(compressedFile);
-      return uncompressedFile;
+    const targetFile = file.isCompressed
+      ? zlib.unzipSync(compressedFile)
+      : compressedFile;
+
+    if (keepFileMetadata) {
+      const fileName = file.fileName ?? BigInt(file.fileHash).toString(16);
+      return new BSAFileMetadata(targetFile, fileName, folder.folderName);
     }
 
-    return compressedFile;
+    return targetFile;
   }
 }
 
