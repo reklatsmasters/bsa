@@ -1,9 +1,10 @@
+import zlib from 'node:zlib';
 import { BSAHeader, BSAContentType } from './header.js';
 import { FileRecord, FolderRecord } from './file.js';
 import { getBit } from './bitwise.js';
 
 const FILE_HEADER = 4_281_154;
-const MAX_FILE_SIZE = 0xff_ff_ff_ff >>> 2; // eslint-disable-line no-bitwise
+const MAX_FILE_SIZE = 0x7f_ff_ff_ff;
 
 /**
  * Read file header.
@@ -160,4 +161,85 @@ export function readFileTree(file, header) {
   }
 
   return foldersTree;
+}
+
+/**
+ * BSA file data.
+ */
+class _BSAFileData {
+  isCompressed;
+  file;
+  fileName;
+
+  /**
+   * @constructor
+   * @param {Buffer} data File data.
+   * @param {boolean} isCompressed Check is file compressed.
+   */
+  constructor(data, isCompressed) {
+    if (!Buffer.isBuffer(data)) {
+      throw new TypeError('Invalid argument 1');
+    }
+
+    this.file = data;
+    this.isCompressed = isCompressed;
+  }
+
+  /**
+   * Compress the file.
+   * @param {Function} callback
+   */
+  toCompressed(callback) {
+    if (typeof callback !== 'function') {
+      throw new TypeError('Callback must be a function');
+    }
+
+    if (this.isCompressed) {
+      queueMicrotask(() => callback(null, this.file));
+    } else {
+      zlib.gzip(this.file, callback);
+    }
+  }
+
+  /**
+   * Decompress the file.
+   * @param {Function} callback
+   */
+  toDecompressed(callback) {
+    if (typeof callback !== 'function') {
+      throw new TypeError('Callback must be a function');
+    }
+
+    if (this.isCompressed) {
+      zlib.unzip(this.file, callback);
+    } else {
+      queueMicrotask(() => callback(null, this.file));
+    }
+  }
+}
+
+/**
+ * Represend BSA file structure.
+ */
+export class BSArchive {
+  header;
+
+  /**
+   * @constructor
+   * @param {BSAHeader} header
+   */
+  constructor(header) {
+    this.header = header;
+  }
+}
+
+/**
+ * Read BSA file structure.
+ * @param {Buffer} bsafile
+ */
+export function readBSArchive(bsafile) {
+  const header = readHeader(bsafile);
+  const archive = new BSArchive(header);
+
+  return archive;
 }
