@@ -71,12 +71,10 @@ function* extract(bsafile, options = {}) {
     throw new TypeError('Argument 1 must be a Buffer');
   }
 
-  const { keepFileMetadata } = Object.assign(
-    {
-      keepFileMetadata: false,
-    },
-    options,
-  );
+  const { keepFileMetadata } = {
+    keepFileMetadata: false,
+    ...options,
+  };
 
   const header = readHeader(bsafile);
   checkHeader(header);
@@ -113,12 +111,10 @@ function extractFile(bsafile, index, options = {}) {
     throw new TypeError('Argument 1 must be a Buffer');
   }
 
-  const { keepFileMetadata } = Object.assign(
-    {
-      keepFileMetadata: false,
-    },
-    options,
-  );
+  const { keepFileMetadata } = {
+    keepFileMetadata: false,
+    ...options,
+  };
 
   const header = readHeader(bsafile);
   checkHeader(header);
