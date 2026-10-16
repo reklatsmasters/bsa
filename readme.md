@@ -1,5 +1,5 @@
 # bsa
-[![travis](https://travis-ci.org/ReklatsMasters/bsa.svg)](https://travis-ci.org/ReklatsMasters/bsa)
+[![CI](https://github.com/ReklatsMasters/bsa/actions/workflows/ci.yml/badge.svg)](https://github.com/ReklatsMasters/bsa/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/bsa.svg)](https://npmjs.org/package/bsa)
 [![license](https://img.shields.io/npm/l/bsa.svg)](https://npmjs.org/package/bsa)
 [![downloads](https://img.shields.io/npm/dm/bsa.svg)](https://npmjs.org/package/bsa)

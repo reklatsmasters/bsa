@@ -1,22 +1,40 @@
 {
   "name": "bsa",
   "version": "0.1.0",
-  "description": "Bethesda Softworks Archive compress/decompress",
+  "description": "Bethesda Softworks Archive (BSA) reader and extractor (Oblivion, v103)",
   "type": "module",
-  "exports": "./src/main.js",
-  "repository": {
-    "url": "reklatsmasters/bsa",
-    "type": "git"
+  "main": "./src/main.js",
+  "exports": {
+    ".": "./src/main.js"
   },
+  "files": [
+    "src"
+  ],
+  "keywords": [
+    "bsa",
+    "bethesda",
+    "oblivion",
+    "skyrim",
+    "archive",
+    "extract",
+    "game"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ReklatsMasters/bsa.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ReklatsMasters/bsa/issues"
+  },
+  "homepage": "https://github.com/ReklatsMasters/bsa#readme",
   "author": "Dmitry Tsvettsikh",
   "license": "MIT",
-  "bin": {
-    "bsa": "./bin/bsa.js"
+  "engines": {
+    "node": ">=18"
   },
   "scripts": {
-    "lint": "npx eslint src/* lib/* bin/*",
-    "cover": "npx jest --coverage --forceExit",
-    "test": "node --test test/*"
+    "lint": "npx xo",
+    "test": "node --test test/*.js"
   },
   "devDependencies": {
     "prettier": "^3.2.5",
