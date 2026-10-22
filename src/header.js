@@ -1,6 +1,7 @@
 import { getBit, setBit } from './bitwise.js';
 
 const HEADER_SIZE = 36;
+const FILE_HEADER = 4_281_154;
 
 /**
  * Archive flags for file v0x67
@@ -96,18 +97,86 @@ class BSAHeaderFlagsOblivion {
  */
 export class BSAHeader {
   version = 0;
-  offsetFolders = HEADER_SIZE; // Offset of beginning of folder records.
+  headerSize = HEADER_SIZE; // Size of the header; folder records start here.
   /** @type {BSAHeaderFlagsOblivion} */
   flags = 0; // Arcgive flags
   totalFolders = 0; // The number of all folders in archive
   totalFiles = 0; // The number of all files in archive.
   totalFolderNameLength = 0; // Total length of all folder names, including \0's
   totalFileNameLength = 0; // Total length of all file names, including \0's.
+  /** @type {BSAContentType} */
   contentType = 0; // Content type flags
 
-  constructor(flags = 0) {
-    this.flags = new BSAHeaderFlagsOblivion(flags);
+  /**
+   * Create a new BSA file header or read one from a Buffer.
+   * @constructor
+   * @param {Buffer} [data] Header data.
+   */
+  constructor(data = null) {
+    if (Buffer.isBuffer(data)) {
+      constructHeader(data, this);
+    } else {
+      this.version = 103;
+      this.flags = new BSAHeaderFlagsOblivion();
+      this.contentType = new BSAContentType();
+    }
   }
+}
+
+/**
+ * Construct a new header object.
+ * @param {Buffer} data Header data.
+ * @param {BSAHeader} header Header object.
+ */
+function constructHeader(data, header) {
+  if (data.length < HEADER_SIZE) {
+    throw new RangeError('Indalid header data');
+  }
+
+  let offset = 0;
+
+  const fileHeader = data.readUInt32LE(offset);
+  offset += 4;
+
+  if (fileHeader !== FILE_HEADER) {
+    throw new Error('Invalid file');
+  }
+
+  header.version = data.readUInt32LE(offset);
+  offset += 4;
+
+  // Header size
+  header.headerSize = data.readUInt32LE(offset);
+  offset += 4;
+
+  const flags = data.readUInt32LE(offset);
+
+  switch (header.version) {
+    case 103: {
+      header.flags = new BSAHeaderFlagsOblivion(flags);
+      break;
+    }
+
+    default: {
+      throw new Error('Invalid file version');
+    }
+  }
+
+  offset += 4;
+
+  header.totalFolders = data.readUInt32LE(offset);
+  offset += 4;
+
+  header.totalFiles = data.readUInt32LE(offset);
+  offset += 4;
+
+  header.totalFolderNameLength = data.readUInt32LE(offset);
+  offset += 4;
+
+  header.totalFileNameLength = data.readUInt32LE(offset);
+  offset += 4;
+
+  header.contentType = new BSAContentType(data.readUInt32LE(offset));
 }
 
 /**

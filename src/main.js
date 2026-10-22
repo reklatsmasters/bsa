@@ -1,6 +1,7 @@
 import path from 'node:path';
 import zlib from 'node:zlib';
-import { readHeader, readFileTree } from './reader.js';
+import { readFileTree } from './reader.js';
+import { BSAHeader } from './header.js';
 
 export { list, list as ls, extract, extractFile };
 
@@ -13,7 +14,7 @@ function list(bsafile) {
     throw new TypeError('Argument 1 must be a Buffer');
   }
 
-  const header = readHeader(bsafile);
+  const header = new BSAHeader(bsafile);
   checkHeader(header);
 
   const tree = readFileTree(bsafile, header);
@@ -76,7 +77,7 @@ function* extract(bsafile, options = {}) {
     ...options,
   };
 
-  const header = readHeader(bsafile);
+  const header = new BSAHeader(bsafile);
   checkHeader(header);
 
   const tree = readFileTree(bsafile, header);
@@ -119,7 +120,7 @@ function extractFile(bsafile, index, options = {}) {
     ...options,
   };
 
-  const header = readHeader(bsafile);
+  const header = new BSAHeader(bsafile);
   checkHeader(header);
 
   if (index >= header.totalFiles) {

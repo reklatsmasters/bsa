@@ -1,50 +1,8 @@
 import zlib from 'node:zlib';
-import { BSAHeader, BSAContentType } from './header.js';
 import { FileRecord, FolderRecord } from './file.js';
 import { getBit } from './bitwise.js';
 
-const FILE_HEADER = 4_281_154;
 const MAX_FILE_SIZE = 0x3f_ff_ff_ff;
-
-/**
- * Read file header.
- * @param {Buffer} file Raw bsa file.
- */
-export function readHeader(file) {
-  let offset = 0;
-
-  const fileHeader = file.readUInt32LE(offset);
-  offset += 4;
-
-  if (fileHeader !== FILE_HEADER) {
-    throw new Error('Invalid file');
-  }
-
-  const fileVersion = file.readUInt32LE(offset);
-  offset += 4;
-
-  const header = new BSAHeader(file.readUInt32LE(offset + 4));
-  header.version = fileVersion;
-
-  header.offsetFolders = file.readUInt32LE(offset);
-  offset += 8;
-
-  header.totalFolders = file.readUInt32LE(offset);
-  offset += 4;
-
-  header.totalFiles = file.readUInt32LE(offset);
-  offset += 4;
-
-  header.totalFolderNameLength = file.readUInt32LE(offset);
-  offset += 4;
-
-  header.totalFileNameLength = file.readUInt32LE(offset);
-  offset += 4;
-
-  header.contentType = new BSAContentType(file.readUInt32LE(offset));
-
-  return header;
-}
 
 /**
  * Read NULL-terminated string.
@@ -65,7 +23,7 @@ function nullstr(buf, start = 0) {
 /**
  * Read folder record.
  * @param {Buffer} file BSA file.
- * @param {BSAHeader} header
+ * @param {import('./header.js').BSAHeader} header
  * @param {number} offset Bytes offset.
  * @param {FolderRecord} folder
  * @returns {number} Offset to file records.
@@ -91,7 +49,7 @@ function readFolder(file, header, offset, folder) {
 /**
  * Get the names of files, one by one.
  * @param {Buffer} bsafile BSA file.
- * @param {BSAHeader} header
+ * @param {import('./header.js').BSAHeader} header
  * @param {number} offset
  */
 function* getFileNames(bsafile, header, offset) {
@@ -106,7 +64,7 @@ function* getFileNames(bsafile, header, offset) {
 /**
  * Read file record.
  * @param {Buffer} bsafile
- * @param {BSAHeader} header
+ * @param {import('./header.js').BSAHeader} header
  * @param {number} offset
  * @param {FileRecord} file
  * @returns {number}
@@ -128,7 +86,7 @@ function readFile(bsafile, header, offset, file) {
 /**
  * Read file tree.
  * @param {Buffer} file Raw bsa file.
- * @param {BSAHeader} header File header.
+ * @param {import('./header.js').BSAHeader} header File header.
  */
 export function readFileTree(file, header) {
   const foldersTree = [];
@@ -138,7 +96,7 @@ export function readFileTree(file, header) {
     const folder = new FolderRecord();
     foldersTree.push(folder);
 
-    const offset = header.offsetFolders + i * 16;
+    const offset = header.headerSize + i * 16;
     const offsetFileRecords = readFolder(file, header, offset, folder);
 
     for (let index = 0; index < folder.totalFiles; index++) {
@@ -216,30 +174,4 @@ class _BSAFileData {
       queueMicrotask(() => callback(null, this.file));
     }
   }
-}
-
-/**
- * Represend BSA file structure.
- */
-export class BSArchive {
-  header;
-
-  /**
-   * @constructor
-   * @param {BSAHeader} header
-   */
-  constructor(header) {
-    this.header = header;
-  }
-}
-
-/**
- * Read BSA file structure.
- * @param {Buffer} bsafile
- */
-export function readBSArchive(bsafile) {
-  const header = readHeader(bsafile);
-  const archive = new BSArchive(header);
-
-  return archive;
 }
