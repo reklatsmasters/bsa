@@ -83,11 +83,14 @@ function* extract(bsafile, options = {}) {
 
   for (const folder of tree) {
     for (const file of folder.files) {
-      const start = file.offsetFileBlock + 4;
-      const compressedFile = bsafile.subarray(start, file.fileSize + start);
+      const start = file.isCompressed
+        ? file.offsetFileBlock + 4
+        : file.offsetFileBlock;
+      const end = file.offsetFileBlock + file.fileSize;
+      const compressedFile = bsafile.subarray(start, end);
 
       const targetFile = file.isCompressed
-        ? zlib.unzipSync(compressedFile)
+        ? zlib.inflateSync(compressedFile)
         : compressedFile;
 
       if (keepFileMetadata) {
@@ -135,11 +138,14 @@ function extractFile(bsafile, index, options = {}) {
 
     const i = index - (counter - folder.totalFiles);
     const file = folder.files[i];
-    const start = file.offsetFileBlock + 4;
-    const compressedFile = bsafile.subarray(start, file.fileSize + start);
+    const start = file.isCompressed
+      ? file.offsetFileBlock + 4
+      : file.offsetFileBlock;
+    const end = file.offsetFileBlock + file.fileSize;
+    const compressedFile = bsafile.subarray(start, end);
 
     const targetFile = file.isCompressed
-      ? zlib.unzipSync(compressedFile)
+      ? zlib.inflateSync(compressedFile)
       : compressedFile;
 
     if (keepFileMetadata) {

@@ -4,7 +4,7 @@ import { FileRecord, FolderRecord } from './file.js';
 import { getBit } from './bitwise.js';
 
 const FILE_HEADER = 4_281_154;
-const MAX_FILE_SIZE = 0x7f_ff_ff_ff;
+const MAX_FILE_SIZE = 0x3f_ff_ff_ff;
 
 /**
  * Read file header.
