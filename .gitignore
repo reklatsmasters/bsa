@@ -1,6 +1,10 @@
 npm-debug.log*
 node_modules
 .idea
+lcov.info
 
 # Game assets (copyrighted Bethesda content) — kept locally, not distributed
 test/*.bsa
+
+# other files
+*.pdf*

@@ -34,7 +34,8 @@
   },
   "scripts": {
     "lint": "npx xo",
-    "test": "node --test test/*.js"
+    "test": "node --test test/*.js",
+    "cover": "node --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=lcov.info test/*.js"
   },
   "devDependencies": {
     "prettier": "^3.2.5",
